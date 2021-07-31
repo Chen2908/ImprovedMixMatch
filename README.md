@@ -22,13 +22,17 @@ ________________________________________________________________________________
 
 ### How to run the code
 
-To run a the main loop simply insert the dataset name you wish to run the code for using the main argument *dataset*. ***For example: --dataset=SVHN_partial_ds_0***
+To run a the main loop simply insert the dataset name you wish to run the code for using the main argument *dataset*. 
+***For example: --dataset=SVHN_partial_ds_0***
+
 The run the main.py file from the project directory.
-      - python3 main.py
+```python3 main.py
 
 _______________________________________________________________________________________________________________________________________________________________________
 
+
 ### References:
+
 <a id="1">[1]</a> 
 A. Krizhevsky, "Learning multiple layers of features from tiny images," University of Toronto, Toronto, 2009
 
