@@ -1,6 +1,3 @@
-from git import Repo
-import os
-import tensorflow as tf
 from datetime import datetime
 import tqdm
 from tensorflow.keras.metrics import Mean, Accuracy
@@ -8,9 +5,8 @@ from tensorflow.keras.metrics import Precision, AUC, TrueNegatives, TruePositive
 from sklearn.metrics import roc_auc_score, average_precision_score, confusion_matrix
 from sklearn.model_selection import StratifiedKFold
 from baseline import Baseline
-import numpy as np
-from mixmatch.model import WideResNet
-from mixmatch.mixmatch import mixmatch, semi_loss, linear_rampup, interleave, weight_decay, ema
+from model import WideResNet
+from mixmatch import *
 from datasets_load import *
 import time
 import gc
@@ -22,8 +18,6 @@ from bayes_opt import BayesianOptimization
 from scipy.stats import friedmanchisquare
 import scikit_posthocs as sp
 warnings.filterwarnings('ignore')
-
-CLONED_PATH = './mixmatch'
 
 
 def main(arguments):
@@ -37,9 +31,6 @@ def main(arguments):
     print(datetime.now())
     dataset_name = arguments.dataset
     print(dataset_name)
-    # clone repo
-    if not os.path.exists(CLONED_PATH):
-        Repo.clone_from('https://github.com/ntozer/mixmatch-tensorflow2.0.git', CLONED_PATH)
 
     # read datasets
     file_path = dataset_name + '.tfrecord'
