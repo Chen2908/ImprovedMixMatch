@@ -25,8 +25,8 @@ ________________________________________________________________________________
 To run a the main loop simply insert the dataset name you wish to run the code for using the main argument *dataset*. 
 ***For example: --dataset=SVHN_partial_ds_0***
 
-The run the main.py file from the project directory.
-```python3 main.py
+The run the main.py file from the project directory:
+```python3 main.py```
 
 _______________________________________________________________________________________________________________________________________________________________________
 
