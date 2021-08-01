@@ -5,6 +5,7 @@ from datetime import datetime
 
 
 # all AUC results - from the Excel file
+
 # mix_match
 AUC0 = [0.678757639, 0.686533702, 0.723166411, 0.744005868, 0.715618233, 0.722449811, 0.77076312, 0.776765735,
         0.743803242, 0.762129524, 0.74705665, 0.679233415, 0.806059037, 0.804351206, 0.810804222, 0.723452551,
@@ -31,12 +32,12 @@ def friedman_test(AUC_0, AUC_1, AUC_2, dt, alpha=0.05):
     :param dt: date and time
     :param alpha: significance level, 0.05 by default
     """
-    stat, pvalue = friedmanchisquare(AUC_0, AUC_1, AUC_2)
-    if pvalue <= alpha:
-        print(f'test is significant, statistic: {stat}, p-value: {pvalue}')
+    stat, p_value = friedmanchisquare(AUC_0, AUC_1, AUC_2)
+    if p_value <= alpha:
+        print(f'test is significant, statistic: {stat}, p-value: {p_value}')
         post_hoc_test(AUC_0, AUC_1, AUC_2, dt)
     else:
-        print(f'test is significant, statistic: {stat}, p-value: {pvalue}')
+        print(f'test is significant, statistic: {stat}, p-value: {p_value}')
 
 
 def post_hoc_test(AUC_0, AUC_1, AUC_2, dt):
