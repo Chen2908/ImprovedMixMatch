@@ -26,7 +26,10 @@ To run a the main loop simply insert the dataset name you wish to run the code f
 ***For example: --dataset=SVHN_partial_ds_0***
 
 The run the main.py file from the project directory:
-```python3 main.py --dataset=YOUR_DATASET_NAME```
+```python3 main.py --dataset=YOUR_DATASET_NAME ```
+
+To run the statistical test for all datasets results:
+```python3 StatisticalTests.py ```
 
 _______________________________________________________________________________________________________________________________________________________________________
 
