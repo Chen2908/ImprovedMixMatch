@@ -166,6 +166,7 @@ def main(arguments):
 
     res_df = pd.DataFrame.from_dict(all_results)
     dt = datetime.now().strftime('%m_%d_%Y_%H_%M_%S')
+
     if not os.path.exists('results/'):
         os.makedirs('results/')
     res_df.to_csv(f'results/results_file_{dataset_name}_{dt}.csv', index=False)
