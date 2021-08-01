@@ -15,8 +15,7 @@ import warnings
 from tensorflow.keras.optimizers import Adam
 import pandas as pd
 from bayes_opt import BayesianOptimization
-from scipy.stats import friedmanchisquare
-import scikit_posthocs as sp
+
 warnings.filterwarnings('ignore')
 
 
@@ -48,7 +47,6 @@ def main(arguments):
                     'FPR': [], 'Precision': [],
                     'AUC': [], 'PR Curve': [],
                     'Training time': [], 'Inference time': []}
-    all_AUC_results = {model: [] for model in models}
     # outer loop - 10 fold cross validation
     cv_outer = StratifiedKFold(n_splits=10, shuffle=True, random_state=0)
     fold = 1
@@ -157,10 +155,12 @@ def main(arguments):
             all_results['PR Curve'].append(test_results['AUPRC'])
             all_results['Training time'].append(train_time)
             all_results['Inference time'].append(inference_time)
-            all_AUC_results[model].append(test_results['AUC'])
 
             acc = test_results['Accuracy']
             print(f'accuracy for {model}: {acc}')
+
+            print(f'{model} all results: {all_results}')
+
         fold += 1
         gc.collect()
 
@@ -169,8 +169,6 @@ def main(arguments):
     if not os.path.exists('results/'):
         os.makedirs('results/')
     res_df.to_csv(f'results/results_file_{dataset_name}_{dt}.csv', index=False)
-
-    friedman_test(all_AUC_results[models[0]], all_AUC_results[models[1]], all_AUC_results[models[2]], dataset_name, dt)
 
 
 def initial_const_hyperparameters():
@@ -434,42 +432,6 @@ def validate_baseline(baseline, x_test):
     loss, all_metrics = baseline.evaluate(x_test)
     return all_metrics
 
-
-def friedman_test(AUC_0, AUC_1, AUC_2, dataset_name, dt, alpha=0.05):
-    """
-    This function performs the friedman test for the results of the three algorithms.
-    If the test is significant it calls the Nemenyi post-hoc test
-    :param AUC_0: AUC results of the original MixMatch for all 10 folds
-    :param AUC_1: AUC results of the improved MixMatch for all 10 folds
-    :param AUC_2: AUC results of the baseline for all 10 folds
-    :param dataset_name: the name of the dataset
-    :param dt: date and time
-    :param alpha: significance level, 0.05 by default
-    """
-    with open('results/stats_results.txt', 'a') as results_file:
-        stat, pvalue = friedmanchisquare(AUC_0, AUC_1, AUC_2)
-        if pvalue <= alpha:
-            results_file.write(f'{dataset_name} - {dt} - test is significant, statistic: {stat}, p-value: {pvalue}\n')
-            post_hoc_test(AUC_0, AUC_1, AUC_2, dataset_name, dt)
-        else:
-            results_file.write(f'{dataset_name} - {dt} - test is not significant, statistic: {stat}, p-value: {pvalue}\n')
-
-    results_file.close()
-
-
-def post_hoc_test(AUC_0, AUC_1, AUC_2, dataset_name, dt):
-    """
-    This function performs the Nemenyi post-hoc test
-    :param AUC_0: AUC results of the original MixMatch for all 10 folds
-    :param AUC_1: AUC results of the improved MixMatch for all 10 folds
-    :param AUC_2: AUC results of the baseline for all 10 folds
-    :param dataset_name: the name of the dataset
-    :param dt: date and time
-    """
-    all_AUC = np.array([AUC_0, AUC_1, AUC_2])
-    # perform Nemenyi post-hoc test
-    p_values_df = sp.posthoc_nemenyi_friedman(all_AUC.T)
-    p_values_df.to_csv(f'results/post_hoc_result_{dataset_name}_{dt}.csv')
 
 
 if __name__ == '__main__':
